@@ -1,5 +1,5 @@
 using Grpc.Net.Client;
-using HttpServerWothGrpcClient;
+using HttpServerWithGrpcClient;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HttpServerWithGrpcClient.Controllers
@@ -23,6 +23,7 @@ namespace HttpServerWithGrpcClient.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {
+            /*
             using var channel = GrpcChannel.ForAddress("http://localhost:50051", new GrpcChannelOptions
             {
                 Credentials = Grpc.Core.ChannelCredentials.Insecure // You might need to replace this with secure credentials
@@ -31,6 +32,7 @@ namespace HttpServerWithGrpcClient.Controllers
             var reply = await client.SayHelloAsync(
                   new HelloRequest { Name = "GreeterClient" });
             Console.WriteLine("Greeting: " + reply.Message);
+            */
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

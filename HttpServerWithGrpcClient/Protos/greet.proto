@@ -2,26 +2,158 @@ syntax = "proto3";
 
 option csharp_namespace = "HttpServerWothGrpcClient";
 
-package helloworld;
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+package ChefEnCasa;
 
-  //Sends another greeting
-  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
 
-  rpc SayHelloStreamReply (HelloRequest) returns (stream HelloReply) {}
-}
+message Empty {}
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
-}
-
-// The response message containing the greetings
-message HelloReply {
+message Response {
   string message = 1;
 }
 
+message RequestRegisterUser {
+  string name = 1;
+  string lastName = 2;
+  string email = 3;
+  string userName = 4;
+  string password = 5;
+}
+
+message RequestGetUser {
+    string userName = 1;
+    string password = 2;
+}
+
+message ResponseUser {
+  int32  id = 1;
+  string name = 2;
+  string lastName = 3;
+  string userName = 4;  
+}
+
+
+message Photo{
+    int32 id = 1;
+    string url = 2;
+}
+
+message Ingredient{
+    int32 id = 1;
+    string name = 2;
+}
+
+message ResponseIngredients{
+    repeated Ingredient ingredients = 1;
+}
+
+message Stept{
+    int32 id = 1;
+    string description = 2;
+}
+
+message Category{
+    int32 id = 1;
+    string name = 2;
+}
+
+message ResponseCategorys{
+    repeated Category categorys = 1;
+}
+
+message RequestCreateReciepe{     
+    string title = 1;
+    string description = 2;    
+    repeated Photo photos = 3;
+    repeated Ingredient ingredients = 4;
+    Category category = 5;
+    repeated Stept stepts = 6;
+    int32 prepatarionTimeMinutes = 7;
+    int32 idUser = 8;
+}
+
+message RequestByUser{
+    int32 id = 1;
+}
+
+message ResponseRecipes {
+	repeated Reciepe recipes = 1;
+}
+
+message RequestReciepeToFavorites{
+    int32 idUser = 1;
+    int32 idReciepe = 2;
+}
+
+
+message Reciepe{
+    int32 idReciepe = 1;
+    string title = 2;
+    string description = 3;    
+    repeated Photo photos = 4;
+    repeated Ingredient ingredients = 5;
+    Category category = 6;
+    repeated Stept stepts = 7;
+    int32 prepatarionTimeMinutes = 8;
+    int32 idUser = 9;
+}
+
+
+message RequestFollowUser{
+    int32 idUser = 1;
+    int32 idChefUser = 2;
+}
+
+
+message User{
+    int32 id = 1;
+    string name = 2;
+    string userName = 3;
+}
+message ResponseUsers{
+    repeated User users = 1;
+}
+
+message RequestGetRecipiesByFilters{
+    Category category = 1;
+    string title = 2;
+    repeated Ingredient ingredients = 3;
+    int32 prepatarionTimeMinutesMin = 4;
+    int32 prepatarionTimeMinutesMax = 5;
+}
+
+message ResponseRecipies{
+    repeated Reciepe recipies = 1;
+}
+
+message RequestUpdateReciepe{
+    int32 idReciepe = 1;        
+    string title = 2;
+    string description = 3;    
+    repeated Photo photos = 4;
+    repeated Ingredient ingredients = 5;
+    Category category = 6;
+    repeated Stept stepts = 7;
+    int32 prepatarionTimeMinutes = 8;
+}
+
+
+
+service ChefEnCasa {       
+    rpc GetUser (RequestGetUser) returns (ResponseUser);       
+    rpc GetAllRecipes(Empty) returns (ResponseRecipes);
+    rpc GetAllRecipesByUser(RequestByUser) returns (ResponseRecipes);
+    rpc GetAllFavoritesReciepes(RequestByUser) returns (ResponseRecipies);
+    rpc GetAllSuscriptions (RequestByUser) returns (ResponseUsers);
+    rpc GetRecipiesByFilters (RequestGetRecipiesByFilters) returns (ResponseRecipies);
+    rpc GetAllIngredients (Empty) returns (ResponseIngredients);
+    rpc GetAllCategorys (Empty) returns (ResponseCategorys);
+    
+    rpc RegisterUser (RequestRegisterUser) returns (Response);
+    rpc CreateRecipe (RequestCreateReciepe) returns (Response);
+    rpc AddReciepeToFavorites(RequestReciepeToFavorites) returns (Response);
+    rpc RemoveReciepeToFavorites(RequestReciepeToFavorites) returns (Response);
+    rpc FollowUser(RequestFollowUser) returns (Response);
+    rpc UpdateReciepe(RequestUpdateReciepe) returns (Response);
+    
+}
