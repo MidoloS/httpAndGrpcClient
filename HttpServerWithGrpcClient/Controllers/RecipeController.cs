@@ -1,29 +1,18 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Grpc.Net.Client;
-using HttpServerWithGrpcClient;
+﻿using Grpc.Net.Client;
 using HttpServerWothGrpcClient;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-public class Ingredient
-{
-    public int Id { get; set; }
-    public string? Name { get; set; }
-}
-
 namespace HttpServerWithGrpcClient.Controllers
 {
-    [Route("api/ingredients")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class IngredientController : ControllerBase
+    public class RecipeController : ControllerBase
     {
-
-
-
-        // GET: api/<ValuesController>
+        // GET: api/<RecipeController>
         [HttpGet]
-        public HttpServerWothGrpcClient.ResponseIngredients Get()
+        public HttpServerWothGrpcClient.ResponseRecipes Get()
         {
             using var channel = GrpcChannel.ForAddress("http://localhost:50051", new GrpcChannelOptions
             {
@@ -34,33 +23,33 @@ namespace HttpServerWithGrpcClient.Controllers
 
             var empty = new HttpServerWothGrpcClient.Empty();
 
-            var reply = client.GetAllIngredients(empty);
+            var reply = client.GetAllRecipes(empty);
 
 
 
             return reply;
         }
 
-        // GET api/<ValuesController>/5
+        // GET api/<RecipeController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<ValuesController>
+        // POST api/<RecipeController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<ValuesController>/5
+        // PUT api/<RecipeController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<ValuesController>/5
+        // DELETE api/<RecipeController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
