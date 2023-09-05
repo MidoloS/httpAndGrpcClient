@@ -12,18 +12,34 @@ namespace HttpServerWithGrpcClient.Controllers
     {
         // GET: api/<RecipesController>
         [HttpGet]
-        public HttpServerWothGrpcClient.ResponseRecipes Get()
+        public HttpServerWothGrpcClient.ResponseRecipies Get([FromQuery] string title = ".", [FromQuery] int prepTime = 120, [FromQuery] int categoryId = 0)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:50051/", new GrpcChannelOptions
-            {
-                Credentials = Grpc.Core.ChannelCredentials.Insecure // You might need to replace this with secure credentials
-            });
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            Console.WriteLine(title);
 
             var client = new ChefEnCasa.ChefEnCasaClient(channel);
 
-            var empty = new HttpServerWothGrpcClient.Empty();
+            var category = new HttpServerWothGrpcClient.Category {
+                Id = categoryId,
+                Name = "Category",
+            };
 
-            var reply = client.GetAllRecipes(empty);
+            var ingredients = new HttpServerWothGrpcClient.Ingredient
+            {
+                Id = 2,
+                Name = "Ing2 "
+            };
+
+            var body = new HttpServerWothGrpcClient.RequestGetRecipiesByFilters
+            {
+                Title = title,
+                PrepatarionTimeMinutesMax = prepTime,
+                Category = category,
+                PrepatarionTimeMinutesMin = 0,
+            };
+
+            var reply = client.GetRecipiesByFilters(body);
             return reply;
         }
 

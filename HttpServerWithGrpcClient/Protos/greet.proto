@@ -69,7 +69,7 @@ message RequestCreateReciepe{
     Category category = 5;
     repeated Stept stepts = 6;
     int32 prepatarionTimeMinutes = 7;
-    int32 idUser = 8;
+    int32 userId = 8;
 }
 
 message RequestByUser{
@@ -95,7 +95,7 @@ message Reciepe{
     Category category = 6;
     repeated Stept stepts = 7;
     int32 prepatarionTimeMinutes = 8;
-    int32 idUser = 9;
+    int32 userId = 9;
 }
 
 
