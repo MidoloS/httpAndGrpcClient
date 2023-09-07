@@ -47,6 +47,23 @@ namespace HttpServerWithGrpcClient.Controllers
             return client.GetUser(body);
         }
 
+        [HttpGet("{id}")]
+        public HttpServerWothGrpcClient.ResponseUser Get(int id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+
+
+            var body = new HttpServerWothGrpcClient.RequestByUser
+            {
+                Id = id
+            };
+
+            return client.GetUserById(body);
+        }
+
 
         [HttpPost]
         public dynamic user([FromBody] UserData userData)
