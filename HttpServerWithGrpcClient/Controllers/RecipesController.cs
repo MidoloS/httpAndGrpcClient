@@ -50,6 +50,22 @@ namespace HttpServerWithGrpcClient.Controllers
             return "value";
         }
 
+        [HttpGet("favorites/{user_id}")]
+        public HttpServerWothGrpcClient.ResponseRecipies GetFav(int id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+            var body = new HttpServerWothGrpcClient.RequestByUser {
+                Id = 1,
+            };
+
+            return client.GetAllFavoritesReciepes(body);
+
+
+        }
+
         // POST api/<RecipesController>
         [HttpPost]
         public void Post([FromBody] string value)
