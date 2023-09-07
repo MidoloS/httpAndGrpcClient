@@ -1,36 +1,26 @@
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+ 
 ﻿using Grpc.Net.Client;
 using HttpServerWothGrpcClient;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+public class UserData
+{
+    public string Name { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
+}
 
 namespace HttpServerWithGrpcClient.Controllers
 {
-    [Route("api/[controller]")]
+
+
+    [Route("api/user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
-        // GET: api/<UserController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<UserController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // HttpServerWothGrpcClient.ResponseUser
 
         public class LoginRequest
         {
@@ -57,16 +47,48 @@ namespace HttpServerWithGrpcClient.Controllers
             return client.GetUser(body);
         }
 
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        [HttpPost]
+        public dynamic user([FromBody] UserData userData)
         {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051", new GrpcChannelOptions
+            {
+                Credentials = Grpc.Core.ChannelCredentials.Insecure // You might need to replace this with secure credentials
+            });
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+            var request = new RequestRegisterUser();
+            request.Name = userData.Name;
+            request.LastName = userData.LastName;
+            request.Email = userData.Email;
+            request.UserName = userData.UserName;
+            request.Password = userData.Password;
+
+            var reply = client.RegisterUser(request);
+
+            if (reply.Message == "-1")
+            {
+                return new
+                {
+                    succes = false,
+                    message = "No se creo el usuario",
+                    idUsuario = ""
+                };
+
+            }
+            else
+            {
+                return new
+                {
+                    succes = true,
+                    message = "Usuario creado",
+                    idUsuario = reply.Message
+
+                };
+            }
         }
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
+

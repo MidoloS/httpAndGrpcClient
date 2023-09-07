@@ -95,7 +95,7 @@ message Reciepe{
     Category category = 6;
     repeated Stept stepts = 7;
     int32 prepatarionTimeMinutes = 8;
-    int32 userId = 9;
+    User user = 9;
 }
 
 
