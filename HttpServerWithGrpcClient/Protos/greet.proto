@@ -140,7 +140,8 @@ message RequestUpdateReciepe{
 
 
 service ChefEnCasa {       
-    rpc GetUser (RequestGetUser) returns (ResponseUser);       
+    rpc GetUser (RequestGetUser) returns (ResponseUser);
+    rpc GetUserById (RequestByUser) returns (ResponseUser);
     rpc GetAllRecipes(Empty) returns (ResponseRecipes);
     rpc GetAllRecipesByUser(RequestByUser) returns (ResponseRecipes);
     rpc GetAllFavoritesReciepes(RequestByUser) returns (ResponseRecipies);
