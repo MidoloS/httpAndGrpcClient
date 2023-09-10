@@ -4,6 +4,41 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+public class PhotoData
+{
+    public int Id { get; set; }
+    public string Url { get; set; }
+}
+
+public class SteptData
+{
+    public int Id { get; set; }
+    public string Description { get; set; }
+}
+
+public class IngredientData
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    
+}
+
+public class RecipeData
+{
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public int PreparationTimeMinutes { get; set; }
+    public int IdCategory { get; set; }
+
+    public List<PhotoData> Photos { get; set; }
+    public List<SteptData> Stepts { get; set; }
+    public List<IngredientData> Ingredients { get; set; }
+
+
+   
+
+}
+
 namespace HttpServerWithGrpcClient.Controllers
 {
     [Route("api/[controller]")]
@@ -74,8 +109,51 @@ namespace HttpServerWithGrpcClient.Controllers
 
         // PUT api/<RecipesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public HttpServerWothGrpcClient.Response Put(int id,[FromBody] RecipeData reciepeData)
         {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051", new GrpcChannelOptions
+            {
+                Credentials = Grpc.Core.ChannelCredentials.Insecure // You might need to replace this with secure credentials
+            });
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+            var request = new HttpServerWothGrpcClient.RequestUpdateReciepe();
+            request.IdReciepe = id;
+            request.Title = reciepeData.Title;
+            request.Description = reciepeData.Description;
+            request.PrepatarionTimeMinutes = reciepeData.PreparationTimeMinutes;
+            var category = new HttpServerWothGrpcClient.Category();
+            category.Id = reciepeData.IdCategory;
+            request.Category = category;
+            
+            foreach (PhotoData photo in reciepeData.Photos)
+            {
+                var p = new HttpServerWothGrpcClient.Photo();
+                p.Id = photo.Id;
+                p.Url = photo.Url;
+                request.Photos.Add(p);
+            }
+
+            foreach (SteptData stept in reciepeData.Stepts)
+            {
+                var s = new HttpServerWothGrpcClient.Stept();
+                s.Id = stept.Id;
+                s.Description = stept.Description;
+                request.Stepts.Add(s);
+            }
+
+            foreach(IngredientData ingredient in reciepeData.Ingredients)
+            {
+                var i = new HttpServerWothGrpcClient.Ingredient();
+                i.Id = ingredient.Id;
+                i.Name = ingredient.Name;
+                request.Ingredients.Add(i);
+            }
+
+
+            var reply = client.UpdateReciepe(request);
+
+            return reply;
         }
 
         // DELETE api/<RecipesController>/5
