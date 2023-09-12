@@ -80,9 +80,14 @@ namespace HttpServerWithGrpcClient.Controllers
 
         // GET api/<RecipesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public HttpServerWothGrpcClient.ResponseRecipe Get(int id)
         {
-            return "value";
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+            var request = new HttpServerWothGrpcClient.RequestById();
+            request.Id = id;
+            return client.GetRecipeById(request);
         }
 
         [HttpGet("favorites/{user_id}")]

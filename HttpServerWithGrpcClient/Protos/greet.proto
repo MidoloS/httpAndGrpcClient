@@ -32,6 +32,10 @@ message ResponseUser {
   string userName = 4;  
 }
 
+message ResponseRecipe{
+    Reciepe recipe = 1;
+}
+
 
 message Photo{
     int32 id = 1;
@@ -69,10 +73,14 @@ message RequestCreateReciepe{
     Category category = 5;
     repeated Stept stepts = 6;
     int32 prepatarionTimeMinutes = 7;
-    int32 userId = 8;
+    int32 idUser = 8;
 }
 
 message RequestByUser{
+    int32 id = 1;
+}
+
+message RequestById{
     int32 id = 1;
 }
 
@@ -141,7 +149,7 @@ message RequestUpdateReciepe{
 
 service ChefEnCasa {       
     rpc GetUser (RequestGetUser) returns (ResponseUser);
-    rpc GetUserById (RequestByUser) returns (ResponseUser);
+    rpc GetUserById (RequestByUser) returns (ResponseUser);       
     rpc GetAllRecipes(Empty) returns (ResponseRecipes);
     rpc GetAllRecipesByUser(RequestByUser) returns (ResponseRecipes);
     rpc GetAllFavoritesReciepes(RequestByUser) returns (ResponseRecipies);
@@ -149,7 +157,8 @@ service ChefEnCasa {
     rpc GetRecipiesByFilters (RequestGetRecipiesByFilters) returns (ResponseRecipies);
     rpc GetAllIngredients (Empty) returns (ResponseIngredients);
     rpc GetAllCategorys (Empty) returns (ResponseCategorys);
-    
+    rpc GetRecipeById (RequestById) returns (ResponseRecipe);
+
     rpc RegisterUser (RequestRegisterUser) returns (Response);
     rpc CreateRecipe (RequestCreateReciepe) returns (Response);
     rpc AddReciepeToFavorites(RequestReciepeToFavorites) returns (Response);
