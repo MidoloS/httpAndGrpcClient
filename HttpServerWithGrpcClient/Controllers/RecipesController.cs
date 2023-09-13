@@ -1,6 +1,7 @@
 ﻿using Grpc.Net.Client;
 using HttpServerWothGrpcClient;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,8 +35,9 @@ public class RecipeData
     public List<SteptData> Stepts { get; set; }
     public List<IngredientData> Ingredients { get; set; }
 
+    public int userId {  get; set; }
 
-   
+
 
 }
 
@@ -100,8 +102,8 @@ namespace HttpServerWithGrpcClient.Controllers
             return client.RemoveReciepeToFavorites(body);
         }
         // POST api/<RecipesController>
-            [HttpPost]
-public HttpServerWothGrpcClient.Response Post([FromBody] RecipeData reciepeData)
+        [HttpPost]
+        public HttpServerWothGrpcClient.Response Post([FromBody] RecipeData reciepeData)
          {
            Debug.WriteLine("debug information");
 
@@ -118,6 +120,7 @@ public HttpServerWothGrpcClient.Response Post([FromBody] RecipeData reciepeData)
            var category = new HttpServerWothGrpcClient.Category();
            category.Id = reciepeData.IdCategory;
            request.Category = category;
+            request.IdUser = reciepeData.userId;
 
            foreach (PhotoData photo in reciepeData.Photos)
            {
@@ -208,12 +211,6 @@ public HttpServerWothGrpcClient.Response Post([FromBody] RecipeData reciepeData)
             return client.GetAllFavoritesReciepes(body);
 
 
-        }
-
-        // POST api/<RecipesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
         }
 
         // PUT api/<RecipesController>/5
