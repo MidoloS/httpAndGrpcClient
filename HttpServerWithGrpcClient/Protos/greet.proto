@@ -164,6 +164,7 @@ service ChefEnCasa {
     rpc AddReciepeToFavorites(RequestReciepeToFavorites) returns (Response);
     rpc RemoveReciepeToFavorites(RequestReciepeToFavorites) returns (Response);
     rpc FollowUser(RequestFollowUser) returns (Response);
+    rpc UnFollowUser(RequestFollowUser) returns (Response);
     rpc UpdateReciepe(RequestUpdateReciepe) returns (Response);
     
 }
