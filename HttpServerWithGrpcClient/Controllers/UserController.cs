@@ -3,6 +3,7 @@
 ﻿using Grpc.Net.Client;
 using HttpServerWothGrpcClient;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 public class UserData
 {
@@ -26,6 +27,11 @@ namespace HttpServerWithGrpcClient.Controllers
         {
             public string Password { get; set; }
             public string UserName { get; set; }
+        }
+
+        public class UserRequest
+        {
+            public int IdUser { get; set; }
         }
 
         [HttpPost("login")]
@@ -62,6 +68,46 @@ namespace HttpServerWithGrpcClient.Controllers
             };
 
             return client.GetUserById(body);
+        }
+
+        [HttpPost("follow/{chefId}")]
+        public HttpServerWothGrpcClient.Response Follow(int chefId, [FromBody] int userId)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+
+
+            var body = new RequestFollowUser
+            {
+                IdChefUser = chefId,
+                IdUser = userId
+            };
+
+            Debug.WriteLine("body");
+            Debug.WriteLine(body);
+
+            return client.FollowUser(body);
+        }
+
+        [HttpPost("unfollow/{chefId}")]
+        public HttpServerWothGrpcClient.Response Unfollow(int chefId, [FromBody] int userId)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+            var body = new RequestFollowUser
+            {
+                IdChefUser = chefId,
+                IdUser = userId
+            };
+
+            Debug.WriteLine("body");
+            Debug.WriteLine(body);
+
+            return client.UnFollowUser(body);
         }
 
 

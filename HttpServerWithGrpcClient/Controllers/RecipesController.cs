@@ -197,15 +197,33 @@ namespace HttpServerWithGrpcClient.Controllers
             return client.GetRecipeById(request);
         }
 
-        [HttpGet("favorites/{user_id}")]
-        public HttpServerWothGrpcClient.ResponseRecipies GetFav(int id)
+        [HttpGet("/myRecipes/{user_id}")]
+        public HttpServerWothGrpcClient.ResponseRecipes GetRecipesOfUser(int user_id)
         {
             using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
 
             var client = new ChefEnCasa.ChefEnCasaClient(channel);
 
+            var request = new RequestByUser
+            {
+                Id = user_id
+            };
+
+            return client.GetAllRecipesByUser(request);
+        }
+
+        [HttpGet("favorites/{user_id}")]
+        public HttpServerWothGrpcClient.ResponseRecipies GetFav(int user_id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+            Debug.WriteLine("user_id");
+            Debug.WriteLine($"{user_id}");
+
             var body = new HttpServerWothGrpcClient.RequestByUser {
-                Id = 1,
+                Id = user_id,
             };
 
             return client.GetAllFavoritesReciepes(body);
