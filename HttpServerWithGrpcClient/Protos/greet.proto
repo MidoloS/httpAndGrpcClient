@@ -145,6 +145,17 @@ message RequestUpdateReciepe{
     int32 prepatarionTimeMinutes = 8;
 }
 
+message RequestComment{
+    int32 idUser = 1;
+    int32 idReciepe = 2;
+    string comment = 3;
+}
+
+message RequestRateRecipe{
+    int32 idReciepe = 1;
+    int32 score = 2;
+}
+
 
 
 service ChefEnCasa {       
@@ -166,5 +177,7 @@ service ChefEnCasa {
     rpc FollowUser(RequestFollowUser) returns (Response);
     rpc UnFollowUser(RequestFollowUser) returns (Response);
     rpc UpdateReciepe(RequestUpdateReciepe) returns (Response);
+    rpc CommentRecipe(RequestComment) returns (Response);
+    rpc RateRecipe(RequestRateRecipe) returns (Response);
     
 }

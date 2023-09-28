@@ -41,13 +41,80 @@ public class RecipeData
 
 }
 
+public class CommentData
+{
+    public int IdUser { get; set; }
+    public string Comment   { get; set; }
+}
+
+
+
 namespace HttpServerWithGrpcClient.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class RecipesController : ControllerBase
     {
-    [HttpPost("favorites/{recipe_id}")]
+
+        [HttpPost("qualify/{recipe_id}")]
+        public HttpServerWothGrpcClient.Response commentRecipe(int recipe_id, [FromBody] int score)
+        {
+            try
+            {
+
+                using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+                var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+                var body = new HttpServerWothGrpcClient.RequestRateRecipe
+                {
+                    IdReciepe = recipe_id,
+                    Score = score,
+                };
+
+
+                return client.RateRecipe(body);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("---------------------------");
+                Debug.WriteLine(ex.ToString());
+
+
+
+                throw new Exception();
+            }
+        }
+        [HttpPost("comment/{recipe_id}")]
+        public HttpServerWothGrpcClient.Response commentRecipe(int recipe_id, CommentData commentData)
+        {
+            try
+            {
+                
+                using var channel = GrpcChannel.ForAddress("http://localhost:50051/");                
+                var client = new ChefEnCasa.ChefEnCasaClient(channel);
+                
+                var body = new HttpServerWothGrpcClient.RequestComment
+                {
+                    IdReciepe = recipe_id,
+                    IdUser = commentData.IdUser,
+                    Comment = commentData.Comment,
+                };
+
+
+                return client.CommentRecipe(body);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("---------------------------");
+                Debug.WriteLine(ex.ToString());
+
+
+
+                throw new Exception();
+            }
+        }
+
+        [HttpPost("favorites/{recipe_id}")]
         public HttpServerWothGrpcClient.Response likeRecipe(int recipe_id, [FromBody] int idUser)
         {
             try
