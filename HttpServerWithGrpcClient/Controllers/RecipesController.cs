@@ -154,7 +154,7 @@ namespace HttpServerWithGrpcClient.Controllers
 
         // GET: api/<RecipesController>
         [HttpGet]
-        public HttpServerWothGrpcClient.ResponseRecipies Get([FromQuery] string title = ".", [FromQuery] int prepTime = 120, [FromQuery] int categoryId = 0)
+        public HttpServerWothGrpcClient.ResponseRecipies Get([FromQuery] string title = ".", [FromQuery] int prepTime = 120, [FromQuery] int categoryId = -1, [FromQuery] int ingredientId = -1)
         {
             using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
 
@@ -169,8 +169,8 @@ namespace HttpServerWithGrpcClient.Controllers
 
             var ingredients = new HttpServerWothGrpcClient.Ingredient
             {
-                Id = 2,
-                Name = "Ing2 "
+                Id = ingredientId,
+                Name = "Ing2"
             };
 
             var body = new HttpServerWothGrpcClient.RequestGetRecipiesByFilters
