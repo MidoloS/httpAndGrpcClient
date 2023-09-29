@@ -47,6 +47,13 @@ public class CommentData
     public string Comment   { get; set; }
 }
 
+public class ClasificationData
+{
+    public int IdRecipe { get; set; }
+    public int IdUser { get; set; }
+    public int Clasification { get; set; }
+}
+
 
 
 namespace HttpServerWithGrpcClient.Controllers
@@ -57,7 +64,7 @@ namespace HttpServerWithGrpcClient.Controllers
     {
 
         [HttpPost("qualify/{recipe_id}")]
-        public HttpServerWothGrpcClient.Response commentRecipe(int recipe_id, [FromBody] int score)
+        public HttpServerWothGrpcClient.Response commentRecipe(int recipe_id, ClasificationData clasificationData)
         {
             try
             {
@@ -67,8 +74,9 @@ namespace HttpServerWithGrpcClient.Controllers
 
                 var body = new HttpServerWothGrpcClient.RequestRateRecipe
                 {
-                    IdReciepe = recipe_id,
-                    Score = score,
+                    IdReciepe = clasificationData.IdRecipe,
+                    IdUser = clasificationData.IdUser,
+                    Clasification = clasificationData.Clasification
                 };
 
 
