@@ -70,6 +70,19 @@ namespace HttpServerWithGrpcClient.Controllers
             return client.GetUserById(body);
         }
 
+        [HttpGet("top")]
+        public HttpServerWothGrpcClient.ResponseUsers GetTop()
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+
+            var empty = new HttpServerWothGrpcClient.Empty();
+
+            return client.GetTop10Users(empty);
+        }
+
         [HttpPost("follow/{chefId}")]
         public HttpServerWothGrpcClient.Response Follow(int chefId, [FromBody] int userId)
         {

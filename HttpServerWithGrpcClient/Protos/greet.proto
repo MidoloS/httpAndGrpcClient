@@ -29,7 +29,8 @@ message ResponseUser {
   int32  id = 1;
   string name = 2;
   string lastName = 3;
-  string userName = 4;  
+  string userName = 4;
+  int32 popularity = 5;
 }
 
 message ResponseRecipe{
@@ -104,6 +105,8 @@ message Reciepe{
     repeated Stept stepts = 7;
     int32 prepatarionTimeMinutes = 8;
     User user = 9;
+    int32 popularity = 10;
+    double averageRanking = 11;
 }
 
 
@@ -117,6 +120,7 @@ message User{
     int32 id = 1;
     string name = 2;
     string userName = 3;
+    int32 popularity = 4;
 }
 message ResponseUsers{
     repeated User users = 1;
@@ -157,6 +161,32 @@ message RequestRateRecipe{
     int32 clasification = 3;
 }
 
+message Comment{
+    int32 idComment = 1;
+    int32 idUser = 2;
+    int32 idRecipe = 3;
+    string comment = 4;
+    string username = 5;
+    string timestamp = 6;
+}
+
+message ResponseComments{
+    repeated Comment comments = 1;
+}
+
+message Novedad{
+    string user = 1;
+    string title = 2;
+    string url = 3;
+
+
+}
+
+message ResponseNovedades{
+    repeated Novedad novedad = 1;
+
+}
+
 
 
 service ChefEnCasa {       
@@ -170,6 +200,10 @@ service ChefEnCasa {
     rpc GetAllIngredients (Empty) returns (ResponseIngredients);
     rpc GetAllCategorys (Empty) returns (ResponseCategorys);
     rpc GetRecipeById (RequestById) returns (ResponseRecipe);
+    rpc GetAllCommentsByRecipe (RequestById) returns (ResponseComments);
+    rpc GetTop10Users (Empty) returns (ResponseUsers);
+    rpc GetTop10Recipes (Empty) returns (ResponseRecipes);
+    rpc GetNovedades (Empty) returns (ResponseNovedades);
 
     rpc RegisterUser (RequestRegisterUser) returns (Response);
     rpc CreateRecipe (RequestCreateReciepe) returns (Response);

@@ -49,7 +49,6 @@ public class CommentData
 
 public class ClasificationData
 {
-    public int IdRecipe { get; set; }
     public int IdUser { get; set; }
     public int Clasification { get; set; }
 }
@@ -63,6 +62,32 @@ namespace HttpServerWithGrpcClient.Controllers
     public class RecipesController : ControllerBase
     {
 
+        [HttpGet("top")]
+        public HttpServerWothGrpcClient.ResponseRecipes GetTop()
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+
+            var empty = new HttpServerWothGrpcClient.Empty();
+
+            return client.GetTop10Recipes(empty);
+        }
+
+        [HttpGet("Novedades")]
+        public HttpServerWothGrpcClient.ResponseNovedades GetNovedades()
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+
+            var empty = new HttpServerWothGrpcClient.Empty();
+
+            return client.GetNovedades(empty);
+        }
+
         [HttpPost("qualify/{recipe_id}")]
         public HttpServerWothGrpcClient.Response commentRecipe(int recipe_id, ClasificationData clasificationData)
         {
@@ -74,7 +99,7 @@ namespace HttpServerWithGrpcClient.Controllers
 
                 var body = new HttpServerWothGrpcClient.RequestRateRecipe
                 {
-                    IdReciepe = clasificationData.IdRecipe,
+                    IdReciepe = recipe_id,
                     IdUser = clasificationData.IdUser,
                     Clasification = clasificationData.Clasification
                 };
@@ -302,6 +327,24 @@ namespace HttpServerWithGrpcClient.Controllers
             };
 
             return client.GetAllFavoritesReciepes(body);
+
+
+        }
+
+        [HttpGet("comments/{recipe_id}")]
+        public HttpServerWothGrpcClient.ResponseComments GetComments(int recipe_id)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:50051/");
+
+            var client = new ChefEnCasa.ChefEnCasaClient(channel);
+
+
+            var body = new HttpServerWothGrpcClient.RequestById
+            {
+                Id =  recipe_id,
+            };
+
+            return client.GetAllCommentsByRecipe(body);
 
 
         }
